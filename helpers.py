@@ -56,14 +56,14 @@ def earth_orbital_velocity(h):
 def earth_orbital_period(h):
     return orbital_period_circle(h + r_E, µ=µ_E)
 
-def relative_area_visible_from_height(h,*, R=r_E):
+def relative_area_visible_from_height(h, *, R=r_E):
     r = h+R
     phi = np.arccos(R / r)
     mantel_area = 2 * pi * R**2 * (1 - np.cos(phi))
     area_whole = 4 * pi * R**2
     return mantel_area/area_whole
 
-def hohmann_manoeuvre(h1,h2,*,R=r_E,µ=µ_E):
+def hohmann_manoeuvre(h1, h2, *, R=r_E, µ=µ_E):
     r1 = h1 + R
     r2 = h2 + R
     a = (r1+r2) / 2
@@ -79,7 +79,7 @@ def inclination_change(i, v1, v2 = None):
         return 2 * v1 * np.sin(i / 2)
     return sqrt(v1**2 + v2**2 - 2 * v1 * v2 * np.cos(i))
 
-def hohmann_and_inclination_change(h1,h2,i,*,R=r_E,µ=µ_E):
+def hohmann_and_inclination_change(h1, h2, i, *, R=r_E, µ=µ_E):
     # Inclination change in the second burn of the Hoffmann manoeuvre
     r1 = h1 + R
     r2 = h2 + R
@@ -92,50 +92,50 @@ def hohmann_and_inclination_change(h1,h2,i,*,R=r_E,µ=µ_E):
     return dV
 
 def hohmann_time(h1,h2,*,R=r_E,µ=µ_E):
-    return orbital_period((h1+h2)/2+r_E,µ=µ) / 2
+    return orbital_period((h1+h2)/2+r_E, µ=µ) / 2
 
 def bi_elliptical_transfer(h1,h2, h_util, *,R=r_E,µ=µ_E):
     rA = h1 + R
     rB = h_util + R
     rC = h2 + h_util
 
-    vA = orbital_speed_circle(rA)
-    vAB = orbital_speed(rA, (rA+rB)/2)
+    vA = orbital_speed_circle(rA, µ=µ)
+    vAB = orbital_speed(rA, (rA+rB)/2, µ=µ)
     dvAB = vAB - vA
 
-    vBC = orbital_speed(rB,(rB+rC)/2)
-    dvBC = orbital_speed(rB,(rB+rC)/2) - orbital_speed(rB,(rA+rB)/2)
+    vBC = orbital_speed(rB, (rB+rC)/2, µ=µ)
+    dvBC = orbital_speed(rB, (rB+rC)/2, µ=µ) - orbital_speed(rB, (rA+rB)/2, µ=µ)
 
-    vCD = orbital_speed_circle(rC)
-    dvCD = orbital_speed(rC,(rB+rC)/2) - orbital_speed_circle(rC)
+    vCD = orbital_speed_circle(rC, µ=µ)
+    dvCD = orbital_speed(rC, (rB+rC)/2, µ=µ) - orbital_speed_circle(rC, µ=µ)
 
     return dvAB + dvBC + dvCD
 
-def bi_elliptical_time(h1,h2, h_util, *,R=r_E,µ=µ_E):
-    T1u = orbital_period((h1+h_util)/2+R) / 2
-    Tu2 = orbital_period((h2+h_util)/2+R) / 2
+def bi_elliptical_time(h1,h2, h_util, *, R=r_E, µ=µ_E):
+    T1u = orbital_period((h1+h_util)/2+R, µ=µ) / 2
+    Tu2 = orbital_period((h2+h_util)/2+R, µ=µ) / 2
     return T1u + Tu2
 
-def bi_elliptical_and_inclination_change(h1,h2, h_util, di, *,R=r_E,µ=µ_E):
+def bi_elliptical_and_inclination_change(h1,h2, h_util, di, *, R=r_E, µ=µ_E):
     rA = h1 + R
     rB = h_util + R
     rC = h2 + h_util
 
-    vA = orbital_speed_circle(rA)
-    vAB = orbital_speed(rA, (rA+rB)/2)
+    vA = orbital_speed_circle(rA, µ=µ)
+    vAB = orbital_speed(rA, (rA+rB)/2, µ=µ)
     dvAB = vAB - vA
 
-    vBCa = orbital_speed(rB,(rA+rB)/2)
-    vBC = orbital_speed(rB,(rB+rC)/2)
+    vBCa = orbital_speed(rB,(rA+rB)/2, µ=µ)
+    vBC = orbital_speed(rB,(rB+rC)/2, µ=µ)
     dvBC = inclination_change(di, vBCa, vBC)
 
-    vCD = orbital_speed_circle(rC)
-    dvCD = orbital_speed(rC,(rB+rC)/2) - orbital_speed_circle(rC)
+    vCD = orbital_speed_circle(rC, µ=µ)
+    dvCD = orbital_speed(rC,(rB+rC)/2, µ=µ) - orbital_speed_circle(rC, µ=µ)
 
     return dvAB + dvBC + dvCD
 
 def J2_perturbation(a, e, i):
-    return -3/2 * mean_motion(a) * J2 * (r_E/a) * np.cos(i)* (1-e**2)**2
+    return -3/2 * mean_motion(a) * J2 * (r_E/a)**2 * np.cos(i) / (1-e**2)**2
 
 def J2_inclination_for_period(a, e, T):
     precession = 2*pi / T
