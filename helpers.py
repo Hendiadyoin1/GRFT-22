@@ -2,6 +2,9 @@ import numpy as np
 from numpy import pi, sqrt, cbrt
 from matplotlib import pyplot as plt
 
+
+µ_S = 132_712e6 * 1e3**3    # m³ / s²
+
 µ_E = 398600.4418 * 1e3**3  # m³ / s²
 r_E = 6371e3                # m
 J2_E = 0.00108263
@@ -9,8 +12,12 @@ J2_E = 0.00108263
 sidereal_day = 23.93447192 * 60 * 60 # s
 
 µ_Moon = 4.9e12    # m³ / s²
-r_Moon = 1_738_100 # m
-h_Moon = 384_400_000 
+r_Moon = 1_737_400 # m
+J2_Moon = 202.7e-6
+a_Moon = 0.3844e9  # m
+aa_Moon = 0.4055e9 # m
+pa_Moon = 0.3633e9 # m
+
 
 
 def linear_eccentricity(a, b):
@@ -145,3 +152,5 @@ def J2_inclination_for_period(a, e, T, *, J2=J2_E):
     precession = 2*pi / T
     return np.arccos(-2 * precession * a**2 / (3 * mean_motion(a) * J2 * r_E**2))
 
+def ziolkowski(c_e, m0, mB):
+    return c_e * np.log(m0/mB)
