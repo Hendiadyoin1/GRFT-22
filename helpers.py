@@ -2,9 +2,9 @@ import numpy as np
 from numpy import pi, sqrt, cbrt
 from matplotlib import pyplot as plt
 
-µ_E = 3.98600e14   # m³ / s²
-r_E = 6_378_100    # m
-J2 = 1.08262668e-3
+µ_E = 398600.4418 * 1e3**3  # m³ / s²
+r_E = 6371e3                # m
+J2_E = 0.00108263
 
 sidereal_day = 23.93447192 * 60 * 60 # s
 
@@ -16,8 +16,12 @@ h_Moon = 384_400_000
 def linear_eccentricity(a, b):
     return np.sqrt(a**2 - b**2)
 
+
 def numerical_eccentricity(a, b):
     return linear_eccentricity(a, b) / a
+
+def numerical_eccentricity_from_rarp(ra,rp):
+    return 1 - (2 * rp/(ra+rp))
 
 def semi_latus_rectum(a, b):
     return b**2 / a
@@ -134,10 +138,10 @@ def bi_elliptical_and_inclination_change(h1,h2, h_util, di, *, R=r_E, µ=µ_E):
 
     return dvAB + dvBC + dvCD
 
-def J2_perturbation(a, e, i):
+def J2_perturbation(a, e, i, *, J2=J2_E):
     return -3/2 * mean_motion(a) * J2 * (r_E/a)**2 * np.cos(i) / (1-e**2)**2
 
-def J2_inclination_for_period(a, e, T):
+def J2_inclination_for_period(a, e, T, *, J2=J2_E):
     precession = 2*pi / T
     return np.arccos(-2 * precession * a**2 / (3 * mean_motion(a) * J2 * r_E**2))
 
