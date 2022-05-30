@@ -47,6 +47,8 @@ def orbital_period_circle(a, *, µ=µ_E):
 
 def orbital_height_circle(T, *, µ=µ_E):
     return np.cbrt(T**2 * µ / 4. / pi / pi)
+def orbital_height_from_speed(v,*,µ=µ_E):
+    return µ / v**2
 
 # vis viva
 def orbital_speed(r, a, *, µ=µ_E):
