@@ -7,9 +7,12 @@ from matplotlib import pyplot as plt
 
 µ_E = 398600.4418 * 1e3**3  # m³ / s²
 r_E = 6371e3                # m
-J2_E = 0.00108263
+J2_E = 0.001_082_626_68
+g0 = 9.81                   # m/s²
+r_Earth = 149.6e9           # m  Distance Sun-Earth
+AU = r_Earth
 
-sidereal_day = 23.93447192 * 60 * 60 # s
+sidereal_day = 86_164.0916 # s
 
 µ_Moon = 4.9e12    # m³ / s²
 r_Moon = 1_737_400 # m
